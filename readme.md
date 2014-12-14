@@ -1,0 +1,1 @@
+a script for Xuewei to simulate xymodel and ising model of graphene-like lattice ,a project of the course thermal dynamics II @ fudan 2014
