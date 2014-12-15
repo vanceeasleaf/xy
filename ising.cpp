@@ -3,34 +3,29 @@
 #include <stdlib.h>
 #include <math.h>
 using namespace std;
-void xymodel(int l,int q);
+void ising(int l);
 int START=50000;
 int END=100000;
 int COUNT=END-START+1;
 #define MAXL 129;
 double *e1;
 void calculate(int l,int q,double t,double *sumh,double *sumh2,double *summ,double *summ2);
-double coss[72];
-double sins[72];
-int main(int argc, char ** argv)
+int main(int argc,char ** argv)
 {
-	for(int i=0;i<72;i++){
-	coss[i]=cos(i*5*3.1415/180);
-	sins[i]=sin(i*5*3.1415/180);
-	}
-	int l=10;
+		int l=10;
 	if(argc>1)l=atoi(argv[1]);
-    xymodel(l,72);
+    ising(l);
     return 0;
 }
 
-void xymodel(int l,int q)
+void ising(int l)
 {
+	int q=2;
     double t=.01,tstart=.1,tend=1.50,deltat=.01,sumh=0,sumh2=0,c=0,summ=0,summ2=0,x=0;
-    printf("#condition:(l=%d,q=%d),start simulating,please wait.\n",l,q);
+    printf("#condition:(l=%d),start simulating,please wait.\n",l);
     printf("temperature\tenergy\theat_capacity\tmagnetization\tsusceptibility\n");
     char s[1000]="";
-   	sprintf(s,"xy_L(%d).txt",l,q);
+   	sprintf(s,"ising_L(%d).txt",l);
     FILE *fp=fopen(s,"w");
     //fprintf(fp,"#resultof(L=%d,Q=%d):\n",l,q);
     fprintf(fp,"temperature\tenergy\theat_capacity\tmagnetization\tsusceptibility\n");
@@ -63,7 +58,7 @@ int isMK(int x,int y)
 }
 
 double e_spin(int s1,int s2){
-	return -coss[abs(s1-s2)];
+	return -(s1==s2);
 }
 double e_ij(int at,int x,int y,int l,int a[][129]){
  	int b=y%2?1:-1;
@@ -125,8 +120,6 @@ void calculate(int l,int q,double t,double *sumh,double *sumh2,double *summ,doub
                         }
                     dh=0;
                     dm=0;
-                    Mc=0;
-                    Ms=0;
                     //for(i=0; i<q; i++)b[i]=0;
                     //for(x=rand()%4; x<l; x+=4)
                     for(x=0; x<l; x++)
@@ -136,13 +129,12 @@ void calculate(int l,int q,double t,double *sumh,double *sumh2,double *summ,doub
                                 {
                                     dh+=e_ij(a[x][y],x,y,l,a);
                                     //b[a[x][y]]++;
-                                    Mc+=coss[a[x][y]];
-                                    Ms+=sins[a[x][y]];
+                                    dm+=((double)a[x][y]-0.5)*2;
                                 }
                         }
                     //for(i=1; i<q; i++)b[0]=(b[i]>b[0])?b[i]:b[0];
                     //dm=((double)(b[0]*q)/(double)(l*l)-1)/(double)(q-1);
-                    dm=sqrt(Mc*Mc+Ms*Ms)/(double)(l*l);
+                    dm=fabs(dm)/(double)(l*l);
                     double e=(dh/(double)(l*l));
                     e1[count]=e;
                     (*sumh)+=(dh/(double)(l*l));
