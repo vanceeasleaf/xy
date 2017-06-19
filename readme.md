@@ -1,5 +1,5 @@
 # XYmodel and ISING model
-Simulation of XYmodel and ISING model of graphene-like lattice with Metropolis Mente Carlo
+Simulation of XYmodel and ISING model of graphene-like lattice with Metropolis Monte Carlo
 
 
 > @Authour Yang Zhou
